@@ -74,20 +74,22 @@ function reduceNum(drink) {
 function addNum(drink) {
   drink.stock += 1
 }
-function startEdit(drink) {
+function startEdit(id) {
+  const drink = drinks.value.find((item) => item.id === id)
   drink.edit = true
 }
-function endEdit(drink) {
+function endEdit(id) {
+  const drink = drinks.value.find((item) => item.id === id)
   drink.edit = false
 }
 </script>
 
 <template>
-  <div class="wrap">
-    <div>
+  <div class="container">
+    <div class="d-flex flex-column">
       <h2>WEEK 1 : 餐點管理工具</h2>
-      <table>
-        <thead>
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
           <tr>
             <th scope="col">品項</th>
             <th scope="col">描述</th>
@@ -106,59 +108,38 @@ function endEdit(drink) {
               {{ drink.description }}
             </td>
             <td>{{ drink.price }} 元</td>
-            <td class="stock">
-              <button v-on:click="reduceNum(drink)">-</button>
-              {{ drink.stock }}
-              <button v-on:click="addNum(drink)">+</button>
+            <td class="d-flex justify-content-between align-items-center">
+              <button v-on:click="reduceNum(drink)" class="btn btn-outline-secondary">－</button>
+              <span>{{ drink.stock }}</span>
+              <button v-on:click="addNum(drink)" class="btn btn-outline-secondary">＋</button>
             </td>
-            <td v-if="drink.edit">
-              <button v-on:click="endEdit(drink)" style="color: green">確認</button>
-            </td>
+            <td v-if="drink.edit"></td>
             <td v-else>
-              <button v-on:click="startEdit(drink)">編輯</button>
-            </td>
-            <td v-if="drink.edit">
-              <input type="text" v-model="drink.name" />
+              <button class="btn btn-outline-secondary" v-on:click="startEdit(drink.id)">
+                編輯
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
+      <div v-for="drink in drinks" :key="drink.id">
+        <div v-if="drink.edit" class="input-group mb-5 w-25">
+          <input type="text" class="form-control" v-model="drink.name" />
+          <button v-on:click="endEdit(drink.id)" class="btn btn-outline-success">確認</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;700&display=swap');
-.wrap {
+.container {
   font-family: 'Oswald';
-  display: flex;
-  flex-direction: column;
-}
-table {
   text-align: center;
-  font-size: 18px;
 }
-th,
-td {
-  padding: 8px 10px;
-}
-.stock {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-button {
-  cursor: pointer;
-  margin-left: 10px;
-  margin-right: 10px;
-  background-color: white;
-  border: 1px solid rgb(134, 134, 134);
-  border-radius: 0.5rem;
-  width: 50px;
-  height: 50px;
-}
-input {
-  height: 30px;
-  font-size: 18px;
+h2 {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 </style>
